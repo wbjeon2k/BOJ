@@ -1,1 +1,1 @@
-# BOJ algorithms problem solving practice materials backup
+# BOJ PS practice materials backup
