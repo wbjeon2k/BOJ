@@ -1,0 +1,3 @@
+Knuth optimization
+EER Tree
+Longest Palindromic Subsequence
