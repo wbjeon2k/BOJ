@@ -1,0 +1,3 @@
+https://contest.usaco.org/NOV06.htm
+
+월 + 연도(JAN,FEB,... + 06,07,...)
