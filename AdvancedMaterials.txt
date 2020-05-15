@@ -1,8 +1,10 @@
 Knuth optimization
 EER Tree
 Longest Palindromic Subsequence
-Tree DP
+Tree DP: 
+    http://www.secmem.org/blog/2019/02/10/TreeDP/
 Fast IO
 Two pointers algorithm
 Heavy Light Decomposition: BOJ11438
-LCA algorithm: 11438, 3176
+LCA algorithm:
+    BOJ 11438, 3176
