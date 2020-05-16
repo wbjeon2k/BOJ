@@ -1,5 +1,125 @@
-//unfinished
 #define _CRT_SECURE_NO_WARNINGS
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef pair<int, int> pii;
+typedef vector<int> vi;
+#define Msize 100100
+
+vector<vector<pii>> adjList;
+vector<vi> tree;
+int depth[Msize];
+int parent[Msize][30];
+int maxi[Msize][30];
+int mini[Msize][30];
+bool visited[Msize];
+
+int N, K;
+
+void dfsmaketree(int here, int dep) {
+    visited[here] = true;
+    depth[here] = dep;
+    
+    for (int i = 0; i < adjList[here].size(); ++i) {
+        int there = adjList[here][i].first;
+        int dist = adjList[here][i].second;
+        if (!visited[there]) {
+            parent[there][0] = here;
+            maxi[there][0] = dist;
+            mini[there][0] = dist;
+            tree[here].push_back(there);
+            dfsmaketree(there, dep + 1);
+        }
+    }
+}
+
+void proctree() {
+    for (int i = 1; i < 20; ++i) {
+        for (int j = 1; j <= N; ++j) {
+            parent[j][i] = parent[parent[j][i - 1]][i - 1];
+            maxi[j][i] = max(maxi[j][i-1], maxi[parent[j][i - 1]][i - 1]);
+            //maxi[j][i] 는 2^(i-1) 까지 최대 or  2^(i-1) 에서 2^i 까지 최대
+            mini[j][i] = min(mini[j][i-1], mini[parent[j][i - 1]][i - 1]);
+        }
+    }
+}
+
+pii lca(int x, int y) {
+    int a = x, b = y;
+    if (depth[a] < depth[b]) {
+        swap(a, b);
+    }
+ 
+    int ansmin = INT_MAX - 10000;
+    int ansmax = -ansmin;
+
+    for (int i = 19; i >=0; --i) {
+        if (depth[a] - depth[b] >= (1 << i)) {
+            ansmin = min(ansmin, mini[a][i]);
+            ansmax = max(ansmax, maxi[a][i]);
+            a = parent[a][i];
+        }
+    }
+
+    if (a == b) {
+        //printf("lca %d %d\n", a, b);
+        return { ansmax, ansmin };
+    }
+
+    for (int i = 19; i >= 0; --i) {
+        if (parent[a][i] != parent[b][i]) {
+            ansmin = min(ansmin, min( mini[a][i], mini[b][i]));
+            ansmax = max(ansmax, max(maxi[a][i], maxi[b][i]));
+            a = parent[a][i];
+            b = parent[b][i];
+        }
+    }
+
+    ansmin = min(ansmin, min(mini[a][0], mini[b][0]));
+    ansmax = max(ansmax, max(maxi[a][0], maxi[b][0]));
+
+    //printf("lca %d %d\n", parent[a][0], parent[b][0]);
+
+    return { ansmax, ansmin };
+}
+
+int main() {
+    memset(visited, 0, sizeof(visited));
+    memset(parent, 0, sizeof(parent));
+    memset(maxi, 0, sizeof(maxi));
+    memset(mini, 0, sizeof(mini));
+    memset(depth, 0, sizeof(depth));
+
+    adjList.resize(Msize);
+    tree.resize(Msize);
+
+    scanf("%d", &N);
+
+
+    for (int i = 0; i < N - 1; ++i) {
+        int a, b, c;
+        scanf("%d %d %d", &a, &b, &c);
+        adjList[a].push_back({ b, c });
+        adjList[b].push_back({ a, c });
+    }
+
+    dfsmaketree(1, 0);
+    proctree();
+
+    scanf("%d", &K);
+    for (int i = 0; i < K; ++i) {
+        int a, b;
+        scanf("%d %d", &a, &b);
+        pii ans = lca(a, b);
+        printf("%d %d\n", ans.second, ans.first);
+    }
+
+    return 0;
+}
+
+//first trial TLE
+/*
+/#define _CRT_SECURE_NO_WARNINGS
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -177,3 +297,87 @@ int main()
 
     return 0;
 }
+
+*/
+
+/*
+//koosaga's solution.
+#include <cstdio>
+#include <vector>
+#include <utility>
+#include <algorithm>
+using namespace std;
+typedef pair<int,int> pi;
+
+int n;
+vector<pi> graph[100005];
+int depth[100005];
+int pa[100005][17], minv[100005][17], maxv[100005][17];
+
+void dfs(int x, int p, int e, int d){
+    if(x != 1){
+        pa[x][0] = p;
+        minv[x][0] = e;
+        maxv[x][0] = e;
+        depth[x] = d;
+        for (int i=1; (1<<i) <= d; i++) {
+            pa[x][i] = pa[pa[x][i-1]][i-1];
+            minv[x][i] = min(minv[pa[x][i-1]][i-1],minv[x][i-1]);
+            maxv[x][i] = max(maxv[pa[x][i-1]][i-1],maxv[x][i-1]);
+        }
+    }
+    for (int i=0; i<graph[x].size(); i++) {
+        if(graph[x][i].second == p) continue;
+        dfs(graph[x][i].second,x,graph[x][i].first,d+1);
+    }
+}
+
+inline void query(int a, int b){
+    int diff = depth[b] - depth[a];
+    int minr = 1e9, maxr = 0;
+    for (int i=0; diff; i++) {
+        if(diff&1){
+            minr = min(minr,minv[b][i]);
+            maxr = max(maxr,maxv[b][i]);
+            b = pa[b][i];
+        }
+        diff >>= 1;
+    }
+    for (int i=16; i>=0; i--) {
+        if(pa[a][i] != pa[b][i]){
+            minr = min(minr,minv[a][i]);
+            maxr = max(maxr,maxv[a][i]);
+            minr = min(minr,minv[b][i]);
+            maxr = max(maxr,maxv[b][i]);
+            a = pa[a][i];
+            b = pa[b][i];
+        }
+    }
+    if(a != b){
+        minr = min(minr,minv[a][0]);
+        maxr = max(maxr,maxv[a][0]);
+        minr = min(minr,minv[b][0]);
+        maxr = max(maxr,maxv[b][0]);
+    }
+    printf("%d %d\n",minr,maxr);
+}
+
+int main(){
+    scanf("%d",&n);
+    for (int i=0; i<n-1; i++) {
+        int a,b,c;
+        scanf("%d %d %d",&a,&b,&c);
+        graph[a].push_back(pi(c,b));
+        graph[b].push_back(pi(c,a));
+    }
+    dfs(1,0,0,0);
+    int q;
+    scanf("%d",&q);
+    while (q--) {
+        int a,b;
+        scanf("%d %d",&a,&b);
+        if(depth[a] > depth[b]) swap(a,b);
+        query(a,b);
+    }
+}
+*/
