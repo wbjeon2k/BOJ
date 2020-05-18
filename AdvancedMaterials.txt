@@ -9,4 +9,6 @@ Heavy Light Decomposition: BOJ11438
 LCA algorithm:
     BOJ 11438, 3176
 Segment Tree Lazy Propagation:
-    BOJ 1395, 
+    BOJ 1395,
+2D seg tree & fenwick tree:
+    BOJ 11658
