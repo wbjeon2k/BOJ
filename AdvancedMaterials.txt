@@ -12,3 +12,5 @@ Segment Tree Lazy Propagation:
     BOJ 1395,
 2D seg tree & fenwick tree:
     BOJ 11658
+    
+Trie, suffix tree
