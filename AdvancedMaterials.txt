@@ -14,3 +14,4 @@ Segment Tree Lazy Propagation:
     BOJ 11658
     
 Trie, suffix tree
+2SAT
