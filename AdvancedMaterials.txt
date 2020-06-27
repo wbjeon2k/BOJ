@@ -15,3 +15,9 @@ Segment Tree Lazy Propagation:
     
 Trie, suffix tree
 2SAT
+
+빠른 최대공약수 확장
+빠른 제곱 확장
+소수 확인 확장(밀러 라빈)
+바퀴 인수분해
+폴라드 로 인수분해
