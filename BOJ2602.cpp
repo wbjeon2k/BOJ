@@ -1,3 +1,70 @@
+// BOJ2602
+// revisited
+#define _CRT_SECURE_NO_WARNINGS
+#include <bits/stdc++.h>
+using namespace std;
+
+#define ll long long
+
+char bridge[2][101], magic[22];
+ll cache[101][2][22];
+
+int N, K;
+
+ll dp(int i, int j, int k) {
+	ll& ret = cache[i][j][k];
+	if (ret != -1) return ret;
+
+	if (k == K - 1) {
+		ret = 1;
+		return ret;
+	}
+
+	ret = 0;
+
+	for (int x = j + 1; x < N; ++x) {
+		if (bridge[(i + 1) % 2][x] == magic[k + 1]) {
+			ret += dp((i + 1) % 2, x, k + 1);
+		}
+	}
+
+	return ret;
+}
+
+int main() {
+	scanf("%s", &magic);
+	scanf("%s", bridge[0]);
+	scanf("%s", bridge[1]);
+
+	N = strlen(bridge[0]);
+	K = strlen(magic);
+
+	memset(cache, -1, sizeof(cache));
+
+	ll ans = 0;
+
+	for (int i = 0; i < N; ++i) {
+		if (bridge[0][i] == magic[0]) {
+			ans += dp(0, i, 0);
+		}
+	}
+
+	memset(cache, -1, sizeof(cache));
+
+	for (int i = 0; i < N; ++i) {
+		if (bridge[1][i] == magic[0]) {
+			ans += dp(1, i, 0);
+		}
+	}
+
+	printf("%lld\n", ans);
+
+	return 0;
+
+}
+
+/*
+//1st trial 2020.04.23
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <bits/stdc++.h>
@@ -25,7 +92,7 @@ int calc(int x, int y, int z) {
 
     ret = 0;
     int zprime = (z == 1) ? 0 : 1;
-    for (int i = y; i >= x;--i) {
+    for (int i = y; i >= x; --i) {
         if (s1[x] == input[i][z]) {
             ret += calc(x - 1, i - 1, zprime);
         }
@@ -57,6 +124,7 @@ int main()
 
     return 0;
 }
+*/
 
 /*
 //cubelover's solution.
