@@ -44,8 +44,9 @@ void getsuffixarray() {
 
 	for (int i = 0; i < N; ++i) {
 		suffixlist[i].saidx = i;
-		suffixlist[i].rank.first = inputstring[i] - 'a';
-		suffixlist[i].rank.second = (i < N - 1 ? inputstring[i + 1] - 'a' : -1);
+		suffixlist[i].rank.first = inputstring[i] - 'A';
+		suffixlist[i].rank.second = (i < N - 1 ? inputstring[i + 1] - 'A' : -1);
+		//ascii code of A is smaller than a. inputstring[i] - 'a' is buggy with strings including capital letters.
 	}
 
 	sort(suffixlist, suffixlist + N);
