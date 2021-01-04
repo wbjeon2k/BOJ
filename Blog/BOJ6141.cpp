@@ -1,4 +1,4 @@
-//BOJ6143
+//BOJ6141
 
 #define _CRT_SECURE_NO_WARNINGS
 #include <bits/stdc++.h>

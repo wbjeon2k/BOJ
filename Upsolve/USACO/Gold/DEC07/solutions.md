@@ -127,6 +127,75 @@ Below is Chinese Junior Danqi Chen's full-credit beautifully formatted PASCAL so
 ```
 
 
+# USACO DEC07 Problem 'gourmet' Analysis
+
+by Richard Peng
+The greedy solution works for this task. The first observation is if we sort the requests and grasses by decreasing order of green-ness, the set of grass we need to consider for each request is precisely the set of all grass that hasn't been used yet that has a higher greenness. So we can add grasses to the set as we 'sweep' by them and remove the grasses as we use them.
+
+Let's just consider the prices. The claim is that at each moment, we can pick the cheapest grass that will satisfy the cow. This is true since suppose we pick a more expensive grass and use the cheaper one later, we can swap the choices while keeping both cows satisfied without increasing the total cost.
+
+Now the problem becomes a data structure problem, we need to support the following operations: insertion, deletion, find the first element with key bigger than a given value and we want to do each operation in O(logn) time.
+
+This can be done using STL set. It's also possible to do this without STL using a binary index tree by first assigning values from 1 to n to the prices, then construct a full binary tree with the prices at leafs and track on each node whether the subtree below has values. Both give O(nlogn) solutions.
+
+Below is an extraordinarily compact full-credit solution submitted by Belarus's Gennady Korotkevich:
+
+```cpp
+#include <iterator>
+#include <fstream>
+#include <vector>
+#include <algorithm>
+#include <set>
+
+#define __int64 long long
+
+using namespace std;
+
+vector < pair <int,int> > c,f;
+set < pair <int,int> > a;
+
+int main () {
+    FILE *in  = fopen ("gourmet.in","r");
+    FILE *out = fopen ("gourmet.out","w");
+    int n, m, i, q, w;
+    fscanf (in, "%d%d", &n, &m);
+    for (i=0; i<n; i++) {
+       fscanf (in, "%d%d", &q, &w);
+       c.push_back (make_pair (w, q));
+    }
+    for (i=0; i<m; i++) {
+        fscanf (in, "%d%d", &q, &w);
+        f.push_back (make_pair (w, q));
+    }
+    sort (c.begin (), c.end ());
+    sort (f.begin (), f.end ());
+    int r = m - 1;
+
+    __int64 ans = 0;
+    a.clear ();
+    for  (i=n-1;i>=0;i--) {
+        while (1) {
+            if (r < 0) break;
+            if (f[r].first >= c[i].first) {
+                a.insert (make_pair (f[r].second, r));
+                r--;
+            }
+            else break;
+        }
+        set< pair <int,int> >::iterator d =
+                          a.lower_bound (make_pair (c[i].second, -1));
+        if  (d == a.end ()) {
+            fprintf (out, "-1\n");
+            return 0;
+        }
+        ans +=  (*d).first;
+        a.erase (d);
+    }
+    fprintf (out, "%Ld\n", ans);
+    return 0;
+}
+```
+
 # USACO DEC07 Problem 'bclgold' Analysis
 
 by Christos Tzamos
