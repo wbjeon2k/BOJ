@@ -104,3 +104,50 @@ int main() {
 	return 0;
 
 }
+
+
+/*
+//wjdclgns12's solution. using bitset
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef long long ll;
+typedef pair<int, int> pii;
+typedef pair<ll, ll> pll;
+
+ll gcd(ll a, ll b) { for (; b; a %= b, swap(a, b)); return a; }
+
+int n[3];
+bitset <60001> bs[3];
+
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0), cout.tie(0);
+
+	for (int i = 0; i < 3; i++)
+	{
+		cin >> n[i];
+		for (int j = 0; j < n[i]; j++)
+		{
+			int x; cin >> x;
+			bs[i][x + 30000] = 1;
+		}
+	}
+
+	ll ans = 0;
+	for (int i = 0; i < 30000; i++)
+	{
+		auto res = bs[0] & (bs[1] << i) & (bs[2] << (i + i));
+		ans += res.count();
+	}
+
+	for (int i = 1; i < 30000; i++)
+	{
+		auto res = bs[0] & (bs[1] >> i) & (bs[2] >> (i + i));
+		ans += res.count();
+	}
+
+	cout << ans;
+}
+*/
