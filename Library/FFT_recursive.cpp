@@ -54,6 +54,8 @@ vector<int> convolution(vector<int>& a, vector<int>& b) {
 
 	for (int i = 0; i < n; ++i) C[i] = A[i] * B[i];
 
+	FFT(C, cplx(1, 0) / w);
+
 	vector<int> ret;
 
 	for (int i = 0; i < n; ++i) {
