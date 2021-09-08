@@ -109,3 +109,94 @@ int main() {
     printf("%lld\n", total);
     return 0;
 }
+
+//First trial, TLE
+
+/*
+
+#define _CRT_SECURE_NO_WARNINGS
+#include <bits/stdc++.h>
+
+using namespace std;
+#define ll long long
+#define pii pair<int, int>
+#define pll pair<ll, ll>
+#define pdd pair<double, double>
+#define MAXI 1000000000
+#define cplx complex<double>
+const double PI = acos(-1);
+const ll INF = INT_MAX / 4;
+
+#define MOD 1000000007
+int N, M;
+
+inline bool isOn(int state, int p){
+    if ((state & (1 << p)) != 0) return true;
+    return false;
+}
+
+inline bool chk(int state0, int state1){
+    for (int i = 0; i < (M-1);++i){
+        bool a, b, c, d;
+        a = isOn(state0, i);
+        b = isOn(state0, i + 1);
+        c = isOn(state1, i);
+        d = isOn(state1, i + 1);
+        if ((a == b) && (a == c) && (a == d)) return false;
+    }
+    return true;
+}
+
+ll dp[2][64];
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    //ifstream cin; cin.open("input.txt");
+
+    cin >> N >> M;
+
+    int full_state = (1 << M) - 1;
+    for (int i = 0; i <= full_state;++i){
+        dp[0][i] = 1;
+    }
+
+    for (int i = 1; i < N;++i){
+        if(i%2){
+            for (int j = 0; j <= full_state;++j){
+                dp[1][j] = 0;
+                for (int k = 0; k <= full_state;++k){
+                    if (chk(j, k)) {
+                        dp[1][j] += dp[0][k];
+                        dp[1][j] %= MOD;
+                    }
+                }
+            }
+        }
+        else {
+            for (int j = 0; j <= full_state; ++j) {
+                dp[0][j] = 0;
+                for (int k = 0; k <= full_state; ++k) {
+                    if (chk(j, k)) {
+                        dp[0][j] += dp[1][k];
+                        dp[0][j] %= MOD;
+                    }
+                }
+            }
+        }
+    }
+
+    ll ans = 0;
+    for (int i = 0;i<=full_state;++i){
+        ans += dp[(N-1) % 2][i];
+        ans %= MOD;
+    }
+
+    printf("%lld\n", ans);
+
+    return 0;
+}
+
+*/
