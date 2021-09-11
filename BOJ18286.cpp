@@ -130,11 +130,13 @@ const ll INF = INT_MAX / 4;
 #define MOD 1000000007
 int N, M;
 
+//state 의 p 번째 비트가 켜져있는가?
 inline bool isOn(int state, int p){
     if ((state & (1 << p)) != 0) return true;
     return false;
 }
 
+//state0 와 state1이 2x2 정사각형을 만들면 false, 괜찮으면 true
 inline bool chk(int state0, int state1){
     for (int i = 0; i < (M-1);++i){
         bool a, b, c, d;
@@ -158,11 +160,15 @@ int main() {
 
     cin >> N >> M;
 
+    //full state: 0~(M-1) 번째 비트까지 다 차있는 상태.
     int full_state = (1 << M) - 1;
     for (int i = 0; i <= full_state;++i){
         dp[0][i] = 1;
     }
 
+    //dp(i,state): i번째 줄에서 state 형태로 끝나게 색칠할 수 있는 경우의 수
+    //dp(i,state) = sum of dp(i-1, j) when chk(j,state) is true,
+    //0 <= j <= 31.
     for (int i = 1; i < N;++i){
         if(i%2){
             for (int j = 0; j <= full_state;++j){
@@ -189,6 +195,7 @@ int main() {
     }
 
     ll ans = 0;
+    //N 번째 모든 state 경우의 수 합
     for (int i = 0;i<=full_state;++i){
         ans += dp[(N-1) % 2][i];
         ans %= MOD;

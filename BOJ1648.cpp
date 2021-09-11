@@ -20,6 +20,64 @@ int cache[300][2 << 15];
 int full_state;
 
 int dp(int i, int state) {
+    if (i == (N * M) && state == 0) return 1;
+
+    if (i >= (N * M)) return 0;
+
+    if (state > full_state) return 0;
+
+    int& ret = cache[i][state];
+    if (ret != -1) return ret;
+
+    ret = 0;
+
+    //check if ith is filled
+    if (state & (1 << (M - 1))) {
+        int tstate = (state << 1);
+        if (tstate > full_state) {
+            tstate = (tstate & full_state);
+        }
+        ret = dp(i + 1, tstate);
+    }
+    if (!(state & (1 << (M - 1)))) {
+        int tstate = (state << 1);
+        if (tstate > full_state) {
+            tstate = (tstate & full_state);
+        }
+        ret += dp(i + 1, tstate | 1);
+        ret %= MOD;
+    }
+    if (((i % M) != M - 1) && !(state & (1 << (M - 1))) && !(state & (1 << (M - 2)))) {
+        int tstate = (state << 1);
+        if (tstate > full_state) {
+            tstate = (tstate & full_state);
+        }
+        ret += dp(i + 1, tstate | (1 << M - 1));
+        ret %= MOD;
+    }
+
+    return ret;
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    //ifstream cin; cin.open("input.txt");
+
+    memset(cache, -1, sizeof(cache));
+
+    cin >> N >> M;
+    full_state = (1 << M) - 1;
+
+    printf("%d\n", dp(0, 0));
+
+    return 0;
+}
+
+/*
+int dp(int i, int state) {
 
     if (i == N * M && state == 0) {
         return 1;
@@ -66,6 +124,7 @@ int main() {
 
     return 0;
 }
+*/
 
 /*
 
@@ -74,8 +133,8 @@ int main() {
 #include <cstdio>
 
 int main(){
-	int dp[15][15]  = {};
-	dp[2][1] = 1;
+    int dp[15][15]  = {};
+    dp[2][1] = 1;
 dp[2][2] = 2;
 dp[3][2] = 3;
 dp[4][1] = 1;
@@ -159,3 +218,4 @@ printf("%d",dp[n][m]);
 }
 
 }
+*/
