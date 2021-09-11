@@ -2,7 +2,7 @@
 
 ax + by = gcd(a,b), find gcd(a,b), x0, y0  
 
-```
+```cpp
 ll gcd, x, y;
 void ext_gcd(ll a, ll b){
     if(b==0){x=1; y=0; gcd = a; return;}
@@ -11,6 +11,7 @@ void ext_gcd(ll a, ll b){
     ll t2 = x - (a/b)*y;
     x = t1; y = t2;
 }
+
 
 -------
 
@@ -31,7 +32,7 @@ modular inverse with ext_gcd:
 --> modular inverse: mod_inv = ext_gcd(a,M)  
 --> make it always positive: mod_inv = ((ext_gcd(a,M) + M) % M)  
 
-```
+```cpp
 ll mod_inv(ll a, ll M){
     return ((ext_gcd(a,M) + M) % M);
 }
@@ -52,4 +53,3 @@ ax == 1 (mod P)
 --> x == a^(-1) (mod P)
 --> a^(P-2) == a^(-1) (mod P)
 --> mod_inv: a^(P-2)
-
